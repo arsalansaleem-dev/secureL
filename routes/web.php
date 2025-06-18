@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LearnerAuthController;
+use App\Http\Controllers\Learner\LearnerController;
 
 Route::get('/phpinfo', function () {
     phpinfo();
@@ -41,6 +42,7 @@ Route::get('/', function () {
 });
 
 
+
 Route::prefix('learner')->group(function () {
     Route::get('/login', [LearnerAuthController::class, 'showLoginForm'])->name('learner.login');
     Route::post('/login', [LearnerAuthController::class, 'login']);
@@ -52,7 +54,18 @@ Route::prefix('learner')->group(function () {
         Route::get('/dashboard', function () {
             return view('admin.learner.dashboard');
         })->name('dashboard');
+        
+        Route::get('/preferences', [LearnerController::class, 'preferences'])->name('learner.preferences');
+        Route::put('/preferences', [LearnerController::class, 'updatePreferences'])->name('learner.preferences.update');
+
+        Route::get('/personal-details', [LearnerController::class, 'showPersonalDetails'])->name('learner.personal.details');
+        Route::put('/personal-details', [LearnerController::class, 'updatePersonalDetails'])->name('learner.personal.update');
     });
+
+
 });
+
+
+
 
 require __DIR__.'/auth.php';

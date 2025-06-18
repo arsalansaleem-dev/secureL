@@ -71,8 +71,14 @@
                                 </span>
                             </a>
                             <ul class="dropdown-content" id="profile-dropdown" tabindex="0">
-                                <li tabindex="0"><a class="grey-text text-darken-1" href="user-profile-page.html"><i class="material-icons">person_outline</i> Personal Details</a></li>
-                                <li tabindex="0"><a class="grey-text text-darken-1" href="app-chat.html"><i class="material-icons">chat_bubble_outline</i> My Preferences</a></li>
+                                
+                                <li tabindex="0"><a class="grey-text text-darken-1" href="{{ route('learner.personal.details') }}"><i class="material-icons">person_outline</i> Personal Details</a></li>
+
+                                <li tabindex="0">
+                                    <a class="grey-text text-darken-1" href="{{ route('learner.preferences') }}">
+                                        <i class="material-icons">chat_bubble_outline</i> My Preferences
+                                    </a>
+                                </li>
                                 <li class="divider" tabindex="0"></li>
                                 <li tabindex="0"><a class="grey-text text-darken-1" href="user-login.html"><i class="material-icons">keyboard_tab</i> Logout</a></li>
                             </ul>
