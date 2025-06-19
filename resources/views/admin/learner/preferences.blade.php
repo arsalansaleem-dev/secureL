@@ -1,58 +1,101 @@
-@extends('layouts.app') {{-- Or your layout file --}}
-
-@section('title', 'Learner Preferences')
+@extends('layouts.app')
 
 @section('content')
-<div class="container mt-4">
-    <h2 class="mb-4">Your Preferences</h2>
+<div class="container">
+  <div class="card z-depth-2">
+    <div class="card-content">
+      <h5 class="center-align">My Preferences</h5>
 
-    <form action="{{ route('learner.preferences.update') }}" method="POST">
+      <form method="POST" enctype="multipart/form-data">
         @csrf
-        @method('PUT')
+        <div class="row center-align">
+            <img src="{{ asset('assets/img/default-avatar.jpg') }}" alt="Profile" class="circle responsive-img" style="width: 120px; height: 120px;">
+        </div>
+
+        <div class="row center-align">
+          <div class="file-field input-field">
+            <div class="btn grey lighten-1 black-text">
+              <span>Choose File</span>
+              <input type="file" name="profile_image">
+            </div>
+            <div class="file-path-wrapper">
+              <input class="file-path validate" type="text" placeholder="Upload your profile image">
+            </div>
+            <span class="grey-text text-darken-1">Must be at least 128px by 128px</span>
+          </div>
+        </div>
 
         <div class="row">
-            {{-- Language Preference --}}
-            <div class="col-md-6 mb-3">
-                <label for="language" class="form-label">Preferred Language</label>
-                <select id="language" name="language" class="form-select">
-                    <option value="english" {{ old('language', $preferences->language ?? '') == 'english' ? 'selected' : '' }}>English</option>
-                    <option value="urdu" {{ old('language', $preferences->language ?? '') == 'urdu' ? 'selected' : '' }}>Urdu</option>
-                </select>
-            </div>
+          <div class="input-field col s6">
+            <select name="preferred_transmission">
+              <option value="" disabled selected>Choose your option</option>
+              <option value="Auto">Auto</option>
+              <option value="Manual">Manual</option>
+            </select>
+            <label>Preferred transmission</label>
+          </div>
 
-            {{-- Training Time Preference --}}
-            <div class="col-md-6 mb-3">
-                <label for="training_time" class="form-label">Preferred Training Time</label>
-                <select id="training_time" name="training_time" class="form-select">
-                    <option value="morning" {{ old('training_time', $preferences->training_time ?? '') == 'morning' ? 'selected' : '' }}>Morning</option>
-                    <option value="evening" {{ old('training_time', $preferences->training_time ?? '') == 'evening' ? 'selected' : '' }}>Evening</option>
-                    <option value="weekend" {{ old('training_time', $preferences->training_time ?? '') == 'weekend' ? 'selected' : '' }}>Weekend</option>
-                </select>
-            </div>
-
-            {{-- Transmission Type --}}
-            <div class="col-md-6 mb-3">
-                <label for="transmission" class="form-label">Transmission Type</label>
-                <select id="transmission" name="transmission" class="form-select">
-                    <option value="automatic" {{ old('transmission', $preferences->transmission ?? '') == 'automatic' ? 'selected' : '' }}>Automatic</option>
-                    <option value="manual" {{ old('transmission', $preferences->transmission ?? '') == 'manual' ? 'selected' : '' }}>Manual</option>
-                </select>
-            </div>
-
-            {{-- Gender Preference for Trainer --}}
-            <div class="col-md-6 mb-3">
-                <label for="trainer_gender" class="form-label">Trainer Gender Preference</label>
-                <select id="trainer_gender" name="trainer_gender" class="form-select">
-                    <option value="any" {{ old('trainer_gender', $preferences->trainer_gender ?? '') == 'any' ? 'selected' : '' }}>Any</option>
-                    <option value="male" {{ old('trainer_gender', $preferences->trainer_gender ?? '') == 'male' ? 'selected' : '' }}>Male</option>
-                    <option value="female" {{ old('trainer_gender', $preferences->trainer_gender ?? '') == 'female' ? 'selected' : '' }}>Female</option>
-                </select>
-            </div>
+          <div class="input-field col s6">
+            <input id="language" name="language" type="text" class="validate" value="English">
+            <label for="language">Language spoken</label>
+          </div>
         </div>
 
-        <div class="mt-4">
-            <button type="submit" class="btn btn-primary">Save Preferences</button>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="pickup_address" name="pickup_address" type="text" class="validate" value="4A Shahrah-e-Faisal Rd, PECHS...">
+            <label for="pickup_address">Preferred pickup address</label>
+            <span class="helper-text">This will be the default for new bookings. You can edit it in the dashboard too.</span>
+          </div>
         </div>
-    </form>
+
+        <div class="row">
+          <div class="input-field col s6">
+            <input id="suburb" name="suburb" type="text" class="validate" value="Melbourne, 3004">
+            <label for="suburb">Suburb</label>
+          </div>
+
+          <div class="input-field col s6">
+            <select name="state">
+              <option value="" disabled selected>Choose State</option>
+              <option value="Victoria" selected>Victoria</option>
+              <option value="NSW">New South Wales</option>
+            </select>
+            <label>State</label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-field col s12">
+            <textarea id="note" name="note" class="materialize-textarea" placeholder="e.g. 'Ring door bell' or 'lane access'"></textarea>
+            <label for="note">Add a note for your instructor (optional)</label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12">
+            <h6>Notification Preferences</h6>
+            <label>
+              <input type="checkbox" name="notify_email" class="filled-in" checked />
+              <span>Email - Marketing Communications and special offers</span>
+            </label>
+            <br>
+            <label>
+              <input type="checkbox" name="notify_sms" class="filled-in" />
+              <span>SMS - Marketing Communications and special offers</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="row center-align">
+          <button type="submit" class="btn yellow darken-2 black-text waves-effect waves-light">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 @endsection
+
+
