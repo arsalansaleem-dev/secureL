@@ -31,6 +31,11 @@ class User extends Authenticatable
 
     // === RELATIONSHIPS ===
 
+    public function learnerProfile()
+    {
+        return $this->hasOne(LearnerProfile::class);
+    }
+
     public function instructor()
     {
         return $this->hasOne(Instructor::class);

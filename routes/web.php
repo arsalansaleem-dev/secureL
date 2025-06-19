@@ -59,7 +59,8 @@ Route::prefix('learner')->group(function () {
         Route::put('/preferences', [LearnerController::class, 'updatePreferences'])->name('learner.preferences.update');
 
         Route::get('/personal-details', [LearnerController::class, 'showPersonalDetails'])->name('learner.personal.details');
-        Route::put('/personal-details', [LearnerController::class, 'updatePersonalDetails'])->name('learner.personal.update');
+        Route::put('/personal-details', [LearnerController::class, 'storePersonalDetails'])->name('learner.personal.store');
+ 
     });
 
 

@@ -129,6 +129,24 @@
 
     <!-- BEGIN: Page Main-->
     <div id="main">
+        @if (session('success'))
+          <div class="container">
+            <div class="card-panel green lighten-4 green-text text-darken-4" id="success-alert">
+              <i class="material-icons left">check_circle</i>
+              {{ session('success') }}
+            </div>
+          </div>
+        @endif
+
+        @if (session('error'))
+          <div class="container">
+            <div class="card-panel red lighten-4 red-text text-darken-4" id="error-alert">
+              <i class="material-icons left">error</i>
+              {{ session('error') }}
+            </div>
+          </div>
+        @endif
+
         @yield('content')
     </div>
     <!-- END: Page Main-->
@@ -144,6 +162,22 @@
     </footer>
 
     <!-- END: Footer-->
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const success = document.getElementById('success-alert');
+      const error = document.getElementById('error-alert');
+      
+      [success, error].forEach(el => {
+        if (el) {
+          setTimeout(() => {
+            el.style.transition = 'opacity 0.5s';
+            el.style.opacity = 0;
+            setTimeout(() => el.remove(), 500);
+          }, 4000);
+        }
+      });
+    });
+    </script>
     <!-- BEGIN VENDOR JS-->
     <script src="../../../app-assets/js/vendors.min.js"></script>
     <!-- BEGIN VENDOR JS-->
