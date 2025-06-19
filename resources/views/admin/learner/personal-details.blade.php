@@ -2,30 +2,130 @@
 
 @section('content')
 <div class="container">
-    <h4>Personal Details</h4>
-
-    <form method="POST" action="{{ route('learner.personal.update') }}">
-        @csrf
-        @method('PUT')
-
-        <div class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" name="name" class="form-control" value="{{ old('name', auth()->user()->name) }}" required>
+  <div class="row">
+    <form class="col s12">
+      {{-- Confirm Current Password --}}
+      <div class="col s12">
+        <div class="card scrollspy">
+          <div class="card-content">
+            <h5 class="card-title">We need your current password to confirm your changes</h5>
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">lock_outline</i>
+                <input id="current_password" type="password" class="validate">
+                <label for="current_password">Current Password</label>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div class="form-group mt-3">
-            <label for="email">Email</label>
-            <input type="email" name="email" class="form-control" value="{{ old('email', auth()->user()->email) }}" required>
-        </div>
 
-        <div class="form-group mt-3">
-            <label for="phone">Phone Number</label>
-            <input type="text" name="phone" class="form-control" value="{{ old('phone', auth()->user()->phone) }}">
+      {{-- Account Details --}}
+      <div class="col s12 m6">
+        <div class="card scrollspy">
+          <div class="card-content">
+            <h5 class="card-title">Account Details</h5>
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">account_circle</i>
+                <input id="account_first_name" type="text" class="validate">
+                <label for="account_first_name">First Name</label>
+              </div>
+              <div class="input-field col s12">
+                <i class="material-icons prefix">account_circle</i>
+                <input id="account_last_name" type="text" class="validate">
+                <label for="account_last_name">Last Name</label>
+              </div>
+              <div class="input-field col s12">
+                <i class="material-icons prefix">phone</i>
+                <input id="account_phone" type="text" class="validate">
+                <label for="account_phone">Phone Number</label>
+              </div>
+              <div class="input-field col s12">
+                <i class="material-icons prefix">email</i>
+                <input id="account_email" type="email" class="validate">
+                <label for="account_email">Email</label>
+              </div>
+              <div class="input-field col s12">
+                <i class="material-icons prefix">group</i>
+                <input id="account_relationship" type="text" class="validate">
+                <label for="account_relationship">Relationship</label>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div class="form-group mt-4">
-            <button type="submit" class="btn btn-primary">Update Personal Details</button>
+
+      {{-- Learner's Personal Details --}}
+      <div class="col s12 m6">
+        <div class="card scrollspy">
+          <div class="card-content">
+            <h5 class="card-title">Learner's Personal Details</h5>
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">account_circle</i>
+                <input id="learner_first_name" type="text" class="validate">
+                <label for="learner_first_name">First Name</label>
+              </div>
+              <div class="input-field col s12">
+                <i class="material-icons prefix">account_circle</i>
+                <input id="learner_last_name" type="text" class="validate">
+                <label for="learner_last_name">Last Name</label>
+              </div>
+              <div class="input-field col s12">
+                <i class="material-icons prefix">phone</i>
+                <input id="learner_phone" type="text" class="validate">
+                <label for="learner_phone">Phone Number</label>
+              </div>
+              <div class="input-field col s12">
+                <input type="text" class="datepicker" id="dob">
+                <label for="dob" class="">DOB</label>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      
+
+      {{-- Account Password --}}
+      <div class="col">
+        <div class="card scrollspy">
+          <div class="card-content">
+            <h5 class="card-title">Account Password</h5>
+            <div class="row">
+              <div class="col s12">
+                <span>Leave this blank if you don't want to change your password</span>
+              </div>
+              <div class="input-field col s12">
+                <i class="material-icons prefix">lock_outline</i>
+                <input id="new_password" type="password" class="validate">
+                <label for="new_password">New Password</label>
+              </div>
+              <div class="input-field col s12">
+                <i class="material-icons prefix">lock_outline</i>
+                <input id="confirm_password" type="password" class="validate">
+                <label for="confirm_password">New Password Confirmation</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{-- Submit Button --}}
+      <div class="col s12">
+        <div class="row">
+          <div class="input-field col s12 right-align">
+            <button class="btn waves-effect waves-light" type="submit" name="action">
+              Save Changes
+              <i class="material-icons right">send</i>
+            </button>
+          </div>
+        </div>
+      </div>
     </form>
+  </div>
 </div>
 @endsection
