@@ -18,6 +18,8 @@ class UserPreference extends Model
 
     protected $casts = [
         'notification_settings' => 'array',
+        'language' => 'array',
+
     ];
 
     public function user()

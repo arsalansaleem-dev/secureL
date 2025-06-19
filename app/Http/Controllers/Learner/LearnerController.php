@@ -11,25 +11,55 @@ use Illuminate\Support\Carbon;
 
 class LearnerController extends Controller
 {
+    // public function preferences()
+    // {
+    //     return view('admin.learner.preferences');
+    // }
+
     public function preferences()
     {
-        return view('admin.learner.preferences');
-    }
+        $learner = auth('learner')->user();
+        $preferences = $learner->preferences;
 
+        return view('admin.learner.preferences', compact('preferences'));
+    }
 
     public function updatePreferences(Request $request)
     {
-        // Validate and save preferences here
-        $request->validate([
-            'language' => 'nullable|string|max:100',
+        $learner = auth('learner')->user();
+
+        $validated = $request->validate([
+            'profile_image' => 'nullable|image|max:2048',
+            'preferred_transmission' => 'nullable|in:Auto,Manual',
+            'language' => 'nullable|array',
+            'language.*' => 'string|max:255',
+            'pickup_address' => 'nullable|string|max:255',
+            'suburb' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:100',
+            'note' => 'nullable|string|max:1000',
         ]);
 
-        $learner = auth('learner')->user();
-        $learner->preferred_language = $request->input('language');
-        $learner->save();
+        // Upload image if provided
+        if ($request->hasFile('profile_image')) {
+            $validated['profile_image'] = $request->file('profile_image')->store('profile_images', 'public');
+        }
 
-        return redirect()->route('learner.preferences')->with('success', 'Preferences updated!');
+        // Handle checkboxes manually
+        $validated['notify_email'] = $request->has('notify_email');
+        $validated['notify_sms'] = $request->has('notify_sms');
+
+        // Save to user_preferences
+        $learner->preferences()->updateOrCreate(
+            ['user_id' => $learner->id],
+            array_merge($validated, [
+                'profile_image' => $validated['profile_image'] ?? optional($learner->preferences)->profile_image,
+            ])
+        );
+
+        return redirect()->back()->with('success', 'Preferences updated successfully!');
     }
+
+
 
     public function showPersonalDetails()
     {
