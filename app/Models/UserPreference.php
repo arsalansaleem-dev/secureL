@@ -11,9 +11,12 @@ class UserPreference extends Model
 
     protected $fillable = [
         'user_id',
-        'preferred_language',
         'preferred_transmission',
         'notification_settings',
+        'suburb',
+        'state',
+        'note',
+        'preferred_pickup_address',
     ];
 
     protected $casts = [

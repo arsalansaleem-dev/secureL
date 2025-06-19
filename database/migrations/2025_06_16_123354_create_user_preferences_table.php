@@ -10,8 +10,10 @@ return new class extends Migration {
         Schema::create('user_preferences', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('preferred_language', 50)->nullable();
-            $table->enum('preferred_transmission', ['manual', 'automatic'])->nullable();
+            $table->string('preferred_pickup_address', 250)->nullable();
+            $table->string('suburb', 250)->nullable();
+            $table->string('state', 250)->nullable();
+            $table->enum('preferred_transmission', ['manual', 'auto'])->nullable();
             $table->json('notification_settings')->nullable();
             $table->timestamps();
         });

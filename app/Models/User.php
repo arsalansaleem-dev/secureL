@@ -31,6 +31,12 @@ class User extends Authenticatable
 
     // === RELATIONSHIPS ===
 
+    public function languages()
+    {
+        return $this->hasMany(UserLanguage::class);
+    }
+
+    
     public function learnerProfile()
     {
         return $this->hasOne(LearnerProfile::class);

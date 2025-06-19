@@ -4,24 +4,26 @@ namespace App\Http\Controllers\Learner;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use App\Models\LearnerProfile;
+use App\Models\{LearnerProfile, UserLanguage};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 
 class LearnerController extends Controller
 {
-    // public function preferences()
-    // {
-    //     return view('admin.learner.preferences');
-    // }
 
     public function preferences()
     {
         $learner = auth('learner')->user();
-        $preferences = $learner->preferences;
 
-        return view('admin.learner.preferences', compact('preferences'));
+        // Eager load preferences and user languages
+        $learner->load(['preferences', 'languages']);
+
+        $preferences = $learner->preferences;
+        $languages = $learner->languages->pluck('language')->toArray();
+        $profileImage = $learner->profile_image;
+
+        return view('admin.learner.preferences', compact('preferences', 'languages', 'profileImage'));
     }
 
     public function updatePreferences(Request $request)
@@ -39,27 +41,44 @@ class LearnerController extends Controller
             'note' => 'nullable|string|max:1000',
         ]);
 
-        // Upload image if provided
+        // Upload image to users table
         if ($request->hasFile('profile_image')) {
-            $validated['profile_image'] = $request->file('profile_image')->store('profile_images', 'public');
+            $path = $request->file('profile_image')->store('profile_images', 'public');
+            $learner->profile_image = $path;
+            $learner->save();
         }
 
-        // Handle checkboxes manually
-        $validated['notify_email'] = $request->has('notify_email');
-        $validated['notify_sms'] = $request->has('notify_sms');
+        // Handle checkbox notification settings
+        $notificationSettings = [
+            'notify_email' => $request->has('notify_email'),
+            'notify_sms' => $request->has('notify_sms'),
+        ];
 
-        // Save to user_preferences
+        // Update preferences
         $learner->preferences()->updateOrCreate(
             ['user_id' => $learner->id],
-            array_merge($validated, [
-                'profile_image' => $validated['profile_image'] ?? optional($learner->preferences)->profile_image,
-            ])
+            [
+                'preferred_transmission' => $validated['preferred_transmission'] ?? null,
+                'notification_settings' => json_encode($notificationSettings),
+                'suburb' => $validated['suburb'] ?? null,
+                'note' => $validated['note'] ?? null,
+                'state' => $validated['state'] ?? null,
+                'preferred_pickup_address' => $validated['pickup_address'] ?? null,
+            ]
         );
+
+        // Sync selected languages to the user_languages table
+        if (isset($validated['language'])) {
+            // If you're storing raw strings in user_languages
+            // Remove old entries and insert new ones
+            $learner->languages()->delete();
+            foreach ($validated['language'] as $lang) {
+                $learner->languages()->create(['language' => $lang]);
+            }
+        }
 
         return redirect()->back()->with('success', 'Preferences updated successfully!');
     }
-
-
 
     public function showPersonalDetails()
     {
@@ -117,8 +136,5 @@ class LearnerController extends Controller
 
         return redirect()->back()->with('success', 'Learner personal details saved successfully!');
     }
-
-
-
 
 }
