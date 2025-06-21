@@ -82,24 +82,25 @@ class LearnerController extends Controller
 
     public function showPersonalDetails()
     {
-        return view('admin.learner.personal-details');
-    }
+        $user = auth()->user();
+        $learnerProfile = $user->learnerProfile;
 
+        return view('admin.learner.personal-details', compact('user', 'learnerProfile'));
+    }
 
     public function storePersonalDetails(Request $request)
     {
+
         $request->validate([
             'account_first_name' => 'required|string|max:191',
             'account_last_name' => 'nullable|string|max:191',
             'account_phone' => 'nullable|string|max:20',
             'account_email' => 'required|email|max:191',
             'account_relationship' => 'nullable|string|max:191',
-
             'learner_first_name' => 'nullable|string|max:191',
             'learner_last_name' => 'nullable|string|max:191',
             'learner_phone' => 'nullable|string|max:20',
-            'dob' => 'nullable|date',
-
+            'dob' => ['nullable', 'date_format:d/m/Y'],
             'current_password' => 'required',
             'new_password' => 'nullable|confirmed|min:8',
         ]);
@@ -115,15 +116,26 @@ class LearnerController extends Controller
         $user->phone = $request->account_phone;
         $user->email = $request->account_email;
 
-        $dob = Carbon::createFromFormat('d/m/Y', $request->dob)->format('Y-m-d');
-
         if ($request->filled('new_password')) {
             $user->password = bcrypt($request->new_password);
         }
 
         $user->save();
 
-        // Update or create learner profile
+        // Parse DOB safely
+        $dob = null;
+        if ($request->filled('dob')) {
+            try {
+                // $dob = Carbon::createFromFormat('d/m/Y', $request->dob)->format('Y-m-d');
+                $dob = $request->dob 
+                        ? Carbon::createFromFormat('d/m/Y', $request->dob)->format('Y-m-d')
+                        : null;
+            } catch (\Exception $e) {
+                return back()->withErrors(['dob' => 'Invalid date format. Use dd/mm/yyyy.']);
+            }
+        }
+
+        // Update or create learner profile with relationship
         LearnerProfile::updateOrCreate(
             ['user_id' => $user->id],
             [
@@ -131,6 +143,7 @@ class LearnerController extends Controller
                 'last_name' => $request->learner_last_name,
                 'phone' => $request->learner_phone,
                 'dob' => $dob,
+                'relationship' => $request->account_relationship,
             ]
         );
 

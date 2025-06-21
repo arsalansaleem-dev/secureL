@@ -7,6 +7,17 @@
     @csrf
     @method('PUT')
 
+      {{-- Validation Errors --}}
+      @if ($errors->any())
+        <div class="card-panel red lighten-2 white-text">
+          <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
+      @endif
+
       {{-- Confirm Current Password --}}
       <div class="col s12">
         <div class="card scrollspy">
@@ -29,30 +40,38 @@
           <div class="card-content">
             <h5 class="card-title">Account Details</h5>
             <div class="row">
+              @php
+                  $nameParts = explode(' ', $user->name);
+              @endphp
               <div class="input-field col s12">
                 <i class="material-icons prefix">account_circle</i>
-                <input id="account_first_name" name="account_first_name" type="text" class="validate">
-                <label for="account_first_name">First Name</label>
+                <input id="account_first_name" name="account_first_name" type="text" class="validate"
+                       value="{{ old('account_first_name', $nameParts[0] ?? '') }}">
+                <label for="account_first_name" class="{{ old('account_first_name', $nameParts[0] ?? '') ? 'active' : '' }}">First Name</label>
               </div>
               <div class="input-field col s12">
                 <i class="material-icons prefix">account_circle</i>
-                <input id="account_last_name" name="account_last_name" type="text" class="validate">
-                <label for="account_last_name">Last Name</label>
+                <input id="account_last_name" name="account_last_name" type="text" class="validate"
+                       value="{{ old('account_last_name', $nameParts[1] ?? '') }}">
+                <label for="account_last_name" class="{{ old('account_last_name', $nameParts[1] ?? '') ? 'active' : '' }}">Last Name</label>
               </div>
               <div class="input-field col s12">
                 <i class="material-icons prefix">phone</i>
-                <input id="account_phone" name="account_phone" type="text" class="validate">
-                <label for="account_phone">Phone Number</label>
+                <input id="account_phone" name="account_phone" type="text" class="validate"
+                       value="{{ old('account_phone', $user->phone) }}">
+                <label for="account_phone" class="{{ old('account_phone', $user->phone) ? 'active' : '' }}">Phone Number</label>
               </div>
               <div class="input-field col s12">
                 <i class="material-icons prefix">email</i>
-                <input id="account_email" name="account_email" type="email" class="validate">
-                <label for="account_email">Email</label>
+                <input id="account_email" name="account_email" type="email" class="validate"
+                       value="{{ old('account_email', $user->email) }}">
+                <label for="account_email" class="{{ old('account_email', $user->email) ? 'active' : '' }}">Email</label>
               </div>
               <div class="input-field col s12">
                 <i class="material-icons prefix">group</i>
-                <input id="account_relationship" name="account_relationship" type="text" class="validate">
-                <label for="account_relationship">Relationship</label>
+                <input id="account_relationship" name="account_relationship" type="text" class="validate"
+                       value="{{ old('account_relationship', $learnerProfile->relationship ?? '') }}">
+                <label for="account_relationship" class="{{ old('account_relationship', $learnerProfile->relationship ?? '') ? 'active' : '' }}">Relationship</label>
               </div>
             </div>
           </div>
@@ -67,22 +86,26 @@
             <div class="row">
               <div class="input-field col s12">
                 <i class="material-icons prefix">account_circle</i>
-                <input id="learner_first_name" name="learner_first_name" type="text" class="validate">
-                <label for="learner_first_name">First Name</label>
+                <input id="learner_first_name" name="learner_first_name" type="text" class="validate"
+                       value="{{ old('learner_first_name', $learnerProfile->first_name ?? '') }}">
+                <label for="learner_first_name" class="{{ old('learner_first_name', $learnerProfile->first_name ?? '') ? 'active' : '' }}">First Name</label>
               </div>
               <div class="input-field col s12">
                 <i class="material-icons prefix">account_circle</i>
-                <input id="learner_last_name" name="learner_last_name" type="text" class="validate">
-                <label for="learner_last_name">Last Name</label>
+                <input id="learner_last_name" name="learner_last_name" type="text" class="validate"
+                       value="{{ old('learner_last_name', $learnerProfile->last_name ?? '') }}">
+                <label for="learner_last_name" class="{{ old('learner_last_name', $learnerProfile->last_name ?? '') ? 'active' : '' }}">Last Name</label>
               </div>
               <div class="input-field col s12">
                 <i class="material-icons prefix">phone</i>
-                <input id="learner_phone" name="learner_phone" type="text" class="validate">
-                <label for="learner_phone">Phone Number</label>
+                <input id="learner_phone" name="learner_phone" type="text" class="validate"
+                       value="{{ old('learner_phone', $learnerProfile->phone ?? '') }}">
+                <label for="learner_phone" class="{{ old('learner_phone', $learnerProfile->phone ?? '') ? 'active' : '' }}">Phone Number</label>
               </div>
               <div class="input-field col s12">
-                <input type="text" class="datepicker" id="dob" name="dob">
-                <label for="dob" class="">DOB</label>
+                <input type="text" class="datepicker" id="dob" name="dob"
+                      value="{{ old('dob', $learnerProfile && $learnerProfile->dob ? \Carbon\Carbon::parse($learnerProfile->dob)->format('d/m/Y') : '') }}">
+                <label for="dob" class="{{ old('dob', optional($learnerProfile->dob)->format('d/m/Y')) ? 'active' : '' }}">DOB</label>
               </div>
             </div>
           </div>
@@ -124,6 +147,7 @@
           </div>
         </div>
       </div>
+
     </form>
   </div>
 </div>

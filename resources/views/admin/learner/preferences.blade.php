@@ -13,7 +13,15 @@
         @php
           $prefs = $preferences ?? null;
         @endphp
-
+        @if ($errors->any())
+        <div class="card-panel red lighten-2 white-text">
+          <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
+        @endif 
        {{-- Profile Image --}}
         <div class="row center-align">
           <img src="{{ $profileImage ? asset('storage/' . $profileImage) : asset('assets/img/default-avatar.jpg') }}"
