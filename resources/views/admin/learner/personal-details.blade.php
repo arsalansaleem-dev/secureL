@@ -103,9 +103,14 @@
                 <label for="learner_phone" class="{{ old('learner_phone', $learnerProfile->phone ?? '') ? 'active' : '' }}">Phone Number</label>
               </div>
               <div class="input-field col s12">
-                <input type="text" class="datepicker" id="dob" name="dob"
-                      value="{{ old('dob', $learnerProfile && $learnerProfile->dob ? \Carbon\Carbon::parse($learnerProfile->dob)->format('d/m/Y') : '') }}">
-                <label for="dob" class="{{ old('dob', optional($learnerProfile->dob)->format('d/m/Y')) ? 'active' : '' }}">DOB</label>
+                  @php
+                      $dobValue = old('dob', optional(optional($learnerProfile)->dob)->format('d/m/Y'));
+                  @endphp
+
+                  <input type="text" class="datepicker" id="dob" name="dob"
+                         value="{{ $dobValue }}">
+
+                  <label for="dob" class="{{ $dobValue ? 'active' : '' }}">DOB</label>
               </div>
             </div>
           </div>
