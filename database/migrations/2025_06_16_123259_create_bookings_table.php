@@ -12,7 +12,6 @@ return new class extends Migration {
             $table->foreignId('learner_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('instructor_id')->constrained('instructors')->onDelete('cascade');
             $table->foreignId('vehicle_id')->nullable()->constrained('vehicles')->nullOnDelete();
-            $table->foreignId('package_id')->nullable()->constrained('packages')->nullOnDelete();
             $table->enum('status', ['pending', 'confirmed', 'completed', 'cancelled'])->default('pending');
             $table->dateTime('booking_datetime');
             $table->text('pickup_location')->nullable();

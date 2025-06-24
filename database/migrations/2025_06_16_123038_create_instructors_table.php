@@ -12,7 +12,6 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->decimal('hourly_rate', 8, 2)->nullable();
-            $table->foreignId('vehicle_id')->nullable()->constrained('vehicles')->nullOnDelete();
             $table->decimal('rating', 2, 1)->default(0.0);
             $table->text('bio')->nullable();
             $table->text('languages')->nullable();
