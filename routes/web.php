@@ -8,6 +8,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LearnerAuthController;
 use App\Http\Controllers\Learner\LearnerController;
+use App\Http\Controllers\Auth\InstructorAuthController;
+use App\Http\Controllers\Instructor\InstructorController;
+
 
 Route::get('/phpinfo', function () {
     phpinfo();
@@ -60,13 +63,31 @@ Route::prefix('learner')->group(function () {
 
         Route::get('/personal-details', [LearnerController::class, 'showPersonalDetails'])->name('learner.personal.details');
         Route::put('/personal-details', [LearnerController::class, 'storePersonalDetails'])->name('learner.personal.store');
- 
     });
-
-
 });
 
 
+Route::prefix('instructor')->group(function () {
+    // Instructor Login & Registration
+    Route::get('/login', [InstructorAuthController::class, 'showLoginForm'])->name('instructor.login');
+    Route::post('/login', [InstructorAuthController::class, 'login']);
+
+    Route::get('/register', [InstructorAuthController::class, 'showRegisterForm'])->name('instructor.register');
+    Route::post('/register', [InstructorAuthController::class, 'register']);
+
+    // Protected Routes for Authenticated Instructors
+    Route::middleware(['auth:instructor', 'instructor'])->group(function () {
+        Route::get('/dashboard', function () {
+            return view('admin.instructor.dashboard');
+        })->name('instructor.dashboard');
+
+        Route::get('/preferences', [InstructorController::class, 'preferences'])->name('instructor.preferences');
+        Route::put('/preferences', [InstructorController::class, 'updatePreferences'])->name('instructor.preferences.update');
+
+        Route::get('/personal-details', [InstructorController::class, 'showPersonalDetails'])->name('instructor.personal.details');
+        Route::put('/personal-details', [InstructorController::class, 'storePersonalDetails'])->name('instructor.personal.store');
+    });
+});
 
 
 require __DIR__.'/auth.php';

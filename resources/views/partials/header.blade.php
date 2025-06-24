@@ -66,10 +66,11 @@
 												    </a>
 												</li>
 												<li class="nav-item nav-item-borders py-2">
-													<a href="/instructor-login" class="text-decoration-none">
-														<i class="text-4 text-color-primary" style="top: 0;"></i> Instructor Login
-													</a>
+												    <a href="{{ route('instructor.login') }}" class="text-decoration-none">
+												        <i class="text-4 text-color-primary" style="top: 0;"></i> Instructor Login
+												    </a>
 												</li>
+
 												<li class="nav-item nav-item-borders py-2 pe-1 d-none d-md-inline-flex">
 													<a href="mailto:mail@domain.com"><i class="far fa-envelope text-4 text-color-primary" style="top: 1px;"></i> mail@securelicence.com</a>
 												</li>
