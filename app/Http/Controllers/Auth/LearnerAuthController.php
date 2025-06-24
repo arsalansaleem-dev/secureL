@@ -31,8 +31,6 @@ class LearnerAuthController extends Controller
                 return back()->withErrors(['email' => 'Access denied for non-learners.']);
             }
             return redirect('/learner/dashboard');
-
-            return redirect()->intended(route('learner.dashboard'));
         }
 
         return back()->withErrors(['email' => 'Invalid credentials.']);
@@ -59,7 +57,7 @@ class LearnerAuthController extends Controller
             'role' => 'learner',
         ]);
 
-        Auth::login($user);
-        return redirect()->route('admin.dashboard');
+        Auth::guard('learner')->login($user);
+        return redirect('/learner/dashboard');
     }
 }
