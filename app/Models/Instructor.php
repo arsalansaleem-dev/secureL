@@ -22,6 +22,9 @@ class Instructor extends Model
         'language_preference',
         'is_available',
         'is_verified',
+        'message',
+        'subject',
+        'description_type'
     ];
 
     protected $casts = [

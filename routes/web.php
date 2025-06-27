@@ -81,11 +81,34 @@ Route::prefix('instructor')->group(function () {
             return view('admin.instructor.dashboard');
         })->name('instructor.dashboard');
 
-        Route::get('/preferences', [InstructorController::class, 'preferences'])->name('instructor.preferences');
-        Route::put('/preferences', [InstructorController::class, 'updatePreferences'])->name('instructor.preferences.update');
+        
+         // ✅ New Instructor Pages
+        Route::get('/calendar', [InstructorController::class, 'calendar'])->name('instructor.calendar');
+        Route::get('/learners', [InstructorController::class, 'learners'])->name('instructor.learners');
+        Route::get('/reports', [InstructorController::class, 'reports'])->name('instructor.reports');
+        Route::get('/feedback', [InstructorController::class, 'feedback'])->name('instructor.feedback');
+        Route::get('/support', [InstructorController::class, 'support'])->name('instructor.support');
+        Route::get('/contact', [InstructorController::class, 'contact'])->name('instructor.contact');
+
 
         Route::get('/personal-details', [InstructorController::class, 'showPersonalDetails'])->name('instructor.personal.details');
         Route::put('/personal-details', [InstructorController::class, 'storePersonalDetails'])->name('instructor.personal.store');
+
+        Route::get('/profile-vehicle', [InstructorController::class, 'showProfileVehicle'])->name('instructor.profile.vehicle');
+        Route::put('/profile-vehicle', [InstructorController::class, 'storeProfileVehicle'])->name('instructor.profile.vehicle.store');
+
+        Route::get('/availability', [InstructorController::class, 'showAvailability'])->name('instructor.availability');
+        Route::put('/availability', [InstructorController::class, 'storeAvailability'])->name('instructor.availability.store');
+
+        Route::get('/pricing', [InstructorController::class, 'showPricing'])->name('instructor.pricing');
+        Route::put('/pricing', [InstructorController::class, 'storePricing'])->name('instructor.pricing.store');
+
+        Route::get('/verifications', [InstructorController::class, 'showVerifications'])->name('instructor.verifications');
+        Route::put('/verifications', [InstructorController::class, 'storeVerifications'])->name('instructor.verifications.store');
+
+        Route::get('/banking', [InstructorController::class, 'showBanking'])->name('instructor.banking');
+        Route::put('/banking', [InstructorController::class, 'storeBanking'])->name('instructor.banking.store');
+
     });
 });
 

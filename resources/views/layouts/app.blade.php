@@ -70,7 +70,7 @@
                                     <i></i>
                                 </span>
                             </a>
-                            <ul class="dropdown-content" id="profile-dropdown" tabindex="0">
+                            <!-- <ul class="dropdown-content" id="profile-dropdown" tabindex="0">
                                 
                                 <li tabindex="0"><a class="grey-text text-darken-1" href="{{ route('learner.personal.details') }}"><i class="material-icons">person_outline</i> Personal Details</a></li>
 
@@ -81,7 +81,95 @@
                                 </li>
                                 <li class="divider" tabindex="0"></li>
                                 <li tabindex="0"><a class="grey-text text-darken-1" href="user-login.html"><i class="material-icons">keyboard_tab</i> Logout</a></li>
+                            </ul> -->
+                            @if (Auth::check() && Auth::user()->role === 'instructor')
+                            <ul class="dropdown-content" id="profile-dropdown" tabindex="0">
+
+                                <li tabindex="0">
+                                    <a class="grey-text text-darken-1" href="{{ route('instructor.personal.details') }}">
+                                        <i class="material-icons">person_outline</i> Personal Details
+                                    </a>
+                                </li>
+
+                                <li tabindex="0">
+                                    <a class="grey-text text-darken-1" href="{{ route('instructor.profile.vehicle') }}">
+                                        <i class="material-icons">directions_car</i> My Profile & Vehicle
+                                    </a>
+                                </li>
+
+                                <li tabindex="0">
+                                    <a class="grey-text text-darken-1" href="{{ route('instructor.availability') }}">
+                                        <i class="material-icons">location_on</i> Service Area & Availability
+                                    </a>
+                                </li>
+
+                                <li tabindex="0">
+                                    <a class="grey-text text-darken-1" href="{{ route('instructor.pricing') }}">
+                                        <i class="material-icons">attach_money</i> Set Pricing
+                                    </a>
+                                </li>
+
+                                <li tabindex="0">
+                                    <a class="grey-text text-darken-1" href="{{ route('instructor.verifications') }}">
+                                        <i class="material-icons">verified_user</i> Verifications
+                                    </a>
+                                </li>
+
+                                <li tabindex="0">
+                                    <a class="grey-text text-darken-1" href="{{ route('instructor.banking') }}">
+                                        <i class="material-icons">account_balance</i> Banking
+                                    </a>
+                                </li>
+
+                                <li class="divider" tabindex="0"></li>
+
+                                <li tabindex="0">
+                                    <a class="grey-text text-darken-1" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <i class="material-icons">keyboard_tab</i> Logout
+                                    </a>
+                                </li>
+
                             </ul>
+
+                            {{-- Logout form --}}
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        @endif
+
+                            @if (Auth::check() && Auth::user()->role === 'learner')
+                            <ul class="dropdown-content" id="profile-dropdown" tabindex="0">
+
+                                <li tabindex="0">
+                                    <a class="grey-text text-darken-1" href="{{ route('learner.personal.details') }}">
+                                        <i class="material-icons">person_outline</i> Personal Details
+                                    </a>
+                                </li>
+
+                                <li tabindex="0">
+                                    <a class="grey-text text-darken-1" href="{{ route('learner.preferences') }}">
+                                        <i class="material-icons">chat_bubble_outline</i> My Preferences
+                                    </a>
+                                </li>
+
+                                <li class="divider" tabindex="0"></li>
+
+                                <li tabindex="0">
+                                    <a class="grey-text text-darken-1" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <i class="material-icons">keyboard_tab</i> Logout
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                            {{-- Logout form --}}
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        @endif
+
                         </li>
                     </ul>
                 </div>
@@ -109,17 +197,75 @@
             <h1 class="logo-wrapper"><a class="brand-logo darken-1" href="index.html"><img class="hide-on-med-and-down " src="../../../app-assets/images/logo/materialize-logo.png" alt="materialize logo"><img class="show-on-medium-and-down hide-on-med-and-up" src="../../../app-assets/images/logo/materialize-logo-color.png" alt="materialize logo"><span class="logo-text hide-on-med-and-down">Secure Licence</span></a></h1>
         </div>
         <ul class="sidenav sidenav-collapsible leftside-navigation collapsible sidenav-fixed menu-shadow ps ps--active-y" id="slide-out" data-menu="menu-navigation" data-collapsible="menu-accordion" style="transform: translateX(0%);">
-            <li class="active bold open"><a class="collapsible-header waves-effect waves-cyan " href="JavaScript:void(0)" tabindex="0"><i class="material-icons">settings_input_svideo</i><span class="menu-title" data-i18n="Dashboard">Dashboard</span><span class="badge badge pill orange float-right mr-10">3</span></a>
+            <li class="active bold open"><a class="collapsible-header waves-effect waves-cyan " href="JavaScript:void(0)" tabindex="0"><i class="material-icons">settings_input_svideo</i><span class="menu-title" data-i18n="Dashboard">Dashboard</span>
+            </a>
                 <div class="collapsible-body" style="display: block;">
                     <ul class="collapsible collapsible-sub" data-collapsible="accordion">
-                        <li><a href="dashboard-modern.html"><i class="material-icons">radio_button_unchecked</i><span data-i18n="Modern">Wallet</span></a>
-                        </li>
-                        <li class="active"><a class="active" href="dashboard-ecommerce.html"><i class="material-icons">radio_button_unchecked</i><span data-i18n="eCommerce">Invite Friends</span></a>
-                        </li>
-                        <li><a href="dashboard-analytics.html"><i class="material-icons">radio_button_unchecked</i><span data-i18n="Analytics">Give Feedback</span></a>
-                        </li>
-                        <li><a href="dashboard-analytics.html"><i class="material-icons">radio_button_unchecked</i><span data-i18n="Analytics">Support</span></a>
-                        </li>
+                       @if (Auth::check() && Auth::user()->role === 'learner')
+                            <li>
+                                <a href="dashboard-modern.html">
+                                    <i class="material-icons">radio_button_unchecked</i>
+                                    <span data-i18n="Modern">Wallet</span>
+                                </a>
+                            </li>
+                            <li class="active">
+                                <a class="active" href="dashboard-ecommerce.html">
+                                    <i class="material-icons">radio_button_unchecked</i>
+                                    <span data-i18n="eCommerce">Invite Friends</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="dashboard-analytics.html">
+                                    <i class="material-icons">radio_button_unchecked</i>
+                                    <span data-i18n="Analytics">Give Feedback</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="dashboard-analytics.html">
+                                    <i class="material-icons">radio_button_unchecked</i>
+                                    <span data-i18n="Analytics">Support</span>
+                                </a>
+                            </li>
+                        @endif
+
+                        @if (Auth::check() && Auth::user()->role === 'instructor')
+                            <li>
+                                <a href="{{ route('instructor.calendar') }}">
+                                    <i class="material-icons">calendar_today</i>
+                                    <span data-i18n="Calendar">Calendar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('instructor.learners') }}">
+                                    <i class="material-icons">group</i>
+                                    <span data-i18n="Learners">Learners</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('instructor.reports') }}">
+                                    <i class="material-icons">bar_chart</i>
+                                    <span data-i18n="Reports">Reports</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('instructor.feedback') }}">
+                                    <i class="material-icons">feedback</i>
+                                    <span data-i18n="Feedback">Give Feedback</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('instructor.support') }}">
+                                    <i class="material-icons">support_agent</i>
+                                    <span data-i18n="Support">Support</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('instructor.contact') }}">
+                                    <i class="material-icons">contact_mail</i>
+                                    <span data-i18n="Contact">Contact</span>
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </li>
