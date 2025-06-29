@@ -4,15 +4,12 @@
 <div class="container">
   <div class="card z-depth-2">
     <div class="card-content">
-      <h5 class="center-align">My Preferences</h5>
+      <h5 class="center-align">My Profile & Vehicle Details</h5>
 
       <form method="POST" enctype="multipart/form-data" action="{{ route('learner.preferences.update') }}">
         @csrf
         @method('PUT')
 
-        @php
-          $prefs = $preferences ?? null;
-        @endphp
         @if ($errors->any())
         <div class="card-panel red lighten-2 white-text">
           <ul class="mb-0">
@@ -21,10 +18,11 @@
             @endforeach
           </ul>
         </div>
-        @endif 
-       {{-- Profile Image --}}
+        @endif
+
+        {{-- Profile Section --}}
         <div class="row center-align">
-          <img src="{{ $profileImage ? asset('storage/' . $profileImage) : asset('assets/img/default-avatar.jpg') }}"
+          <img src="{{ asset('assets/img/default-avatar.jpg') }}"
                alt="Profile" class="circle responsive-img" style="width: 120px; height: 120px;">
         </div>
 
@@ -41,97 +39,165 @@
           </div>
         </div>
 
-        {{-- Transmission + Language --}}
-        <div class="row">
-          <div class="input-field col s6">
-            <select name="preferred_transmission">
-              <option value="" disabled selected>Choose your option</option>
-              <option value="Auto" {{ $preferences && $preferences->preferred_transmission == 'auto' ? 'selected' : '' }}>Auto</option>
-              <option value="Manual" {{ $preferences && $preferences->preferred_transmission == 'manual' ? 'selected' : '' }}>Manual</option>
-            </select>
-            <label>Preferred transmission</label>
-          </div>
-
-          <div class="input-field col s6">
-            @php
-              $selectedLanguages = $languages ?? [];
-            @endphp
-            <select name="language[]" id="language" multiple>
-              <option value="English" {{ in_array('English', $selectedLanguages) ? 'selected' : '' }}>English</option>
-              <option value="Urdu" {{ in_array('Urdu', $selectedLanguages) ? 'selected' : '' }}>Urdu</option>
-              <option value="Arabic" {{ in_array('Arabic', $selectedLanguages) ? 'selected' : '' }}>Arabic</option>
-              <option value="Punjabi" {{ in_array('Punjabi', $selectedLanguages) ? 'selected' : '' }}>Punjabi</option>
-            </select>
-            <label for="language">Languages spoken</label>
-          </div>
-        </div>
-
-        {{-- Pickup Address --}}
         <div class="row">
           <div class="input-field col s12">
-            <input id="pickup_address" name="pickup_address" type="text" class="validate"
-                   value="{{ $prefs->preferred_pickup_address ?? '' }}">
-            <label for="pickup_address">Preferred pickup address</label>
-            <span class="helper-text">This will be the default for new bookings. You can edit it in the dashboard too.</span>
+            <textarea id="bio" name="bio" class="materialize-textarea" maxlength="1600"></textarea>
+            <label for="bio">Your Instructor Bio</label>
+            <span class="helper-text right-align">Max 1600 characters</span>
           </div>
         </div>
 
-        {{-- Suburb + State --}}
-        <div class="row">
-          <div class="input-field col s6">
-            <input id="suburb" name="suburb" type="text" class="validate"
-                   value="{{ $prefs->suburb ?? '' }}">
-            <label for="suburb">Suburb</label>
-          </div>
-
-          <div class="input-field col s6">
-            <select name="state">
-              <option value="" disabled selected>Choose State</option>
-              <option value="Victoria" {{ $prefs && $prefs->state == 'Victoria' ? 'selected' : '' }}>Victoria</option>
-              <option value="NSW" {{ $prefs && $prefs->state == 'NSW' ? 'selected' : '' }}>New South Wales</option>
-            </select>
-            <label>State</label>
-          </div>
-        </div>
-
-        {{-- Instructor Note --}}
         <div class="row">
           <div class="input-field col s12">
-            <textarea id="note" name="note" class="materialize-textarea"
-                      placeholder="e.g. 'Ring door bell' or 'lane access'">{{ $prefs->note ?? '' }}</textarea>
-            <label for="note">Add a note for your instructor (optional)</label>
+            <input type="text" name="languages">
+            <label for="languages">Enter any languages you speak fluently</label>
           </div>
         </div>
 
-        {{-- Notification Checkboxes --}}
-        @php
-        $notifications = $prefs && $prefs->notification_settings
-            ? json_decode($prefs->notification_settings, true)
-            : ['notify_email' => false, 'notify_sms' => false];
-        @endphp
         <div class="row">
-          <div class="col s12">
-            <h6>Notification Preferences</h6>
-            <label>
-              <input type="checkbox" name="notify_email" class="filled-in"
-                 {{ $notifications['notify_email'] ? 'checked' : '' }}/>
-              <span>Email - Marketing Communications and special offers</span>
-            </label>
-            <br>
-            <label>
-              <input type="checkbox" name="notify_sms" class="filled-in"
-              {{ $notifications['notify_sms'] ? 'checked' : '' }}/>
-              <span>SMS - Marketing Communications and special offers</span>
-            </label>
+          <div class="input-field col s12">
+            <select name="driving_association_member">
+              <option value="Yes">Yes</option>
+              <option value="No" selected>No</option>
+            </select>
+            <label>Member of a driving instructor association?</label>
           </div>
         </div>
 
-        {{-- Submit --}}
+        <div class="row">
+          <div class="input-field col s6">
+            <select name="start_month">
+              @foreach(['January','February','March','April','May','June','July','August','September','October','November','December'] as $month)
+                <option value="{{ $month }}">{{ $month }}</option>
+              @endforeach
+            </select>
+            <label>Start Month</label>
+          </div>
+
+          <div class="input-field col s6">
+            <select name="start_year">
+              @for ($year = date('Y'); $year >= 1980; $year--)
+                <option value="{{ $year }}">{{ $year }}</option>
+              @endfor
+            </select>
+            <label>Start Year</label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-field col s12">
+            <label>Which transmission(s) do you offer?</label><br><br>
+            <label><input type="checkbox" name="transmission_auto"> <span>Auto</span></label>
+            <label><input type="checkbox" name="transmission_manual"> <span>Manual</span></label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-field col s12">
+            <label>What service(s) do you offer?</label><br><br>
+            <label><input type="checkbox" name="existing_customers"> <span>Driving test repackage - existing customers</span></label><br>
+            <label><input type="checkbox" name="new_customers"> <span>Driving test package - new customers</span></label><br>
+            <label><input type="checkbox" name="coordinator"> <span>Manual instructor coordinator - no vehicle</span></label>
+          </div>
+        </div>
+
+        {{-- Vehicle Details --}}
+<div class="divider"></div>
+<h6 class="mt-4">Vehicle Details</h6>
+
+<div class="row">
+  <div class="input-field col s6">
+    <input type="text" name="transmission">
+    <label for="transmission">Transmission</label>
+  </div>
+  <div class="input-field col s6">
+    <input type="text" name="vehicle_registration_number">
+    <label for="vehicle_registration_number">Vehicle Registration Number</label>
+  </div>
+</div>
+
+<div class="row">
+  <div class="input-field col s6">
+    <input type="text" name="vehicle_make">
+    <label for="vehicle_make">Make</label>
+  </div>
+  <div class="input-field col s6">
+    <input type="text" name="vehicle_model">
+    <label for="vehicle_model">Model</label>
+  </div>
+</div>
+
+<div class="row">
+  <div class="input-field col s4">
+    <input type="text" name="vehicle_country">
+    <label for="vehicle_country">Country</label>
+  </div>
+  <div class="input-field col s4">
+    <input type="text" name="vehicle_year">
+    <label for="vehicle_year">Year</label>
+  </div>
+  <div class="input-field col s4">
+    <input type="text" name="vehicle_safety_rating">
+    <label for="vehicle_safety_rating">ANCAP Safety Rating</label>
+  </div>
+</div>
+
+<div class="row">
+  <div class="input-field col s12">
+    <select name="dual_controls">
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+    <label>Do you instruct with dual controls?</label>
+  </div>
+</div>
+
+{{-- Notification Preferences --}}
+<div class="divider"></div>
+<h6 class="mt-4">Notification Preferences</h6>
+
+<div class="row">
+  <p>
+    <label>
+      <input type="checkbox" name="notify_email" />
+      <span>Email</span>
+    </label>
+  </p>
+  <p>
+    <label>
+      <input type="checkbox" name="notify_sms" />
+      <span>SMS</span>
+    </label>
+  </p>
+</div>
+
+{{-- Marketing & Marketplace --}}
+<div class="divider"></div>
+<h6 class="mt-4">Marketing Preferences</h6>
+
+<div class="row">
+  <p>
+    <label>
+      <input type="checkbox" name="marketing_communications" />
+      <span>Marketing Communications and special offers</span>
+    </label>
+  </p>
+  <p>
+    <label>
+      <input type="checkbox" name="exclude_marketplace" />
+      <span>Exclude me from instructor marketplace search results</span>
+    </label>
+  </p>
+</div>
+
+        
         <div class="row center-align">
           <button type="submit" class="btn yellow darken-2 black-text waves-effect waves-light">
             Save Changes
           </button>
         </div>
+
+
       </form>
     </div>
   </div>

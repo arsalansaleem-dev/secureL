@@ -3,9 +3,9 @@
 @section('content')
 <div class="container">
   <div class="row">
-    <form method="POST" action="{{ route('learner.personal.store') }}" class="col s12">
-    @csrf
-    @method('PUT')
+    <form method="POST" action="{{ route('instructor.availability.store') }}" class="col s12">
+      @csrf
+      @method('PUT')
 
       {{-- Validation Errors --}}
       @if ($errors->any())
@@ -18,118 +18,85 @@
         </div>
       @endif
 
-      {{-- Confirm Current Password --}}
+      {{-- Service Area --}}
       <div class="col s12">
         <div class="card scrollspy">
           <div class="card-content">
-            <h5 class="card-title">We need your current password to confirm your changes</h5>
-            <div class="row">
-              <div class="input-field col s12">
-                <i class="material-icons prefix">lock_outline</i>
-                <input id="current_password" name="current_password" type="password" class="validate">
-                <label for="current_password">Current Password</label>
-              </div>
+            <h5 class="card-title">Service Area</h5>
+            <p>You can add or remove suburbs around Sydney where learners can book with you.</p>
+
+            <div class="input-field">
+              <select id="suburb_selector" multiple>
+                <option value="" disabled selected>Select suburbs</option>
+                {{-- Populate options dynamically --}}
+              </select>
+              <label>Select suburbs around Sydney</label>
+            </div>
+
+            {{-- Map placeholder --}}
+            <div class="card-panel" style="height: 400px;">
+              <div id="map" style="width: 100%; height: 100%;">[Map will render here]</div>
+            </div>
+
+            {{-- Driving Test Locations --}}
+            <div class="input-field">
+              <label>Driving Test Locations</label><br><br>
+              <select multiple name="test_locations[]">
+                <option value="Blacktown">Blacktown</option>
+                <option value="Castle Hill">Castle Hill</option>
+                <option value="Bankstown">Bankstown</option>
+              </select>
             </div>
           </div>
         </div>
       </div>
 
-      {{-- Account Details --}}
-      <div class="col s12 m6">
+      {{-- Availability --}}
+      <div class="col s12">
         <div class="card scrollspy">
           <div class="card-content">
-            <h5 class="card-title">Account Details</h5>
-            <div class="row">
-              @php
-                  $nameParts = explode(' ', $user->name);
-              @endphp
-              <div class="input-field col s12">
-                <i class="material-icons prefix">account_circle</i>
-                <input id="account_first_name" name="account_first_name" type="text" class="validate"
-                       value="{{ old('account_first_name', $nameParts[0] ?? '') }}">
-                <label for="account_first_name" class="{{ old('account_first_name', $nameParts[0] ?? '') ? 'active' : '' }}">First Name</label>
-              </div>
-              <div class="input-field col s12">
-                <i class="material-icons prefix">account_circle</i>
-                <input id="account_last_name" name="account_last_name" type="text" class="validate"
-                       value="{{ old('account_last_name', $nameParts[1] ?? '') }}">
-                <label for="account_last_name" class="{{ old('account_last_name', $nameParts[1] ?? '') ? 'active' : '' }}">Last Name</label>
-              </div>
-              <div class="input-field col s12">
-                <i class="material-icons prefix">phone</i>
-                <input id="account_phone" name="account_phone" type="text" class="validate"
-                       value="{{ old('account_phone', $user->phone) }}">
-                <label for="account_phone" class="{{ old('account_phone', $user->phone) ? 'active' : '' }}">Phone Number</label>
-              </div>
-              <div class="input-field col s12">
-                <i class="material-icons prefix">email</i>
-                <input id="account_email" name="account_email" type="email" class="validate"
-                       value="{{ old('account_email', $user->email) }}">
-                <label for="account_email" class="{{ old('account_email', $user->email) ? 'active' : '' }}">Email</label>
-              </div>
-              <div class="input-field col s12">
-                <i class="material-icons prefix">group</i>
-                <input id="account_relationship" name="account_relationship" type="text" class="validate"
-                       value="{{ old('account_relationship', $learnerProfile->relationship ?? '') }}">
-                <label for="account_relationship" class="{{ old('account_relationship', $learnerProfile->relationship ?? '') ? 'active' : '' }}">Relationship</label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            <h5 class="card-title">Availability Settings</h5>
+            <p>Define your availability per day and default scheduling preferences.</p>
 
-      {{-- Learner's Personal Details --}}
-      <div class="col s12 m6">
-        <div class="card scrollspy">
-          <div class="card-content">
-            <h5 class="card-title">Learner's Personal Details</h5>
-            <div class="row">
-              <div class="input-field col s12">
-                <i class="material-icons prefix">account_circle</i>
-                <input id="learner_first_name" name="learner_first_name" type="text" class="validate"
-                       value="{{ old('learner_first_name', $learnerProfile->first_name ?? '') }}">
-                <label for="learner_first_name" class="{{ old('learner_first_name', $learnerProfile->first_name ?? '') ? 'active' : '' }}">First Name</label>
-              </div>
-              <div class="input-field col s12">
-                <i class="material-icons prefix">account_circle</i>
-                <input id="learner_last_name" name="learner_last_name" type="text" class="validate"
-                       value="{{ old('learner_last_name', $learnerProfile->last_name ?? '') }}">
-                <label for="learner_last_name" class="{{ old('learner_last_name', $learnerProfile->last_name ?? '') ? 'active' : '' }}">Last Name</label>
-              </div>
-              <div class="input-field col s12">
-                <i class="material-icons prefix">phone</i>
-                <input id="learner_phone" name="learner_phone" type="text" class="validate"
-                       value="{{ old('learner_phone', $learnerProfile->phone ?? '') }}">
-                <label for="learner_phone" class="{{ old('learner_phone', $learnerProfile->phone ?? '') ? 'active' : '' }}">Phone Number</label>
-              </div>
-              <div class="input-field col s12">
-                <input type="text" class="datepicker" id="dob" name="dob"
-                      value="{{ old('dob', $learnerProfile && $learnerProfile->dob ? \Carbon\Carbon::parse($learnerProfile->dob)->format('d/m/Y') : '') }}">
-                <label for="dob" class="{{ old('dob', optional($learnerProfile->dob)->format('d/m/Y')) ? 'active' : '' }}">DOB</label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            {{-- Operating Hours for Each Day --}}
+            @php
+              $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            @endphp
 
-      {{-- Account Password --}}
-      <div class="col">
-        <div class="card scrollspy">
-          <div class="card-content">
-            <h5 class="card-title">Account Password</h5>
+            @foreach ($days as $day)
+              <div class="row valign-wrapper">
+                <div class="col s2">
+                  <label>
+                    <input type="checkbox" name="days[{{ strtolower($day) }}][enabled]" />
+                    <span>{{ strtoupper($day) }}</span>
+                  </label>
+                </div>
+
+                <div class="input-field col s2">
+                  <input type="time" name="days[{{ strtolower($day) }}][start]" />
+                  <label class="active">Start</label>
+                </div>
+
+                <div class="input-field col s2">
+                  <input type="time" name="days[{{ strtolower($day) }}][end]" />
+                  <label class="active">End</label>
+                </div>
+              </div>
+            @endforeach
+
             <div class="row">
-              <div class="col s12">
-                <span>Leave this blank if you don't want to change your password</span>
+              {{-- Default Travel Time --}}
+              <div class="input-field col s6">
+                <input id="default_travel_time" name="default_travel_time" type="number" class="validate" min="0">
+                <label for="default_travel_time">Default Travel Time (minutes)</label>
               </div>
-              <div class="input-field col s12">
-                <i class="material-icons prefix">lock_outline</i>
-                <input id="new_password" name="new_password" type="password" class="validate">
-                <label for="new_password">New Password</label>
-              </div>
-              <div class="input-field col s12">
-                <i class="material-icons prefix">lock_outline</i>
-                <input id="new_password_confirmation" name="new_password_confirmation" type="password" class="validate">
-                <label for="new_password_confirmation">New Password Confirmation</label>
+
+              {{-- Default Calendar View --}}
+              <div class="input-field col s6">
+                <label>Default Calendar View</label><br><br>
+                <label><input name="calendar_view" type="radio" value="day" /> <span>Day</span></label><br>
+                <label><input name="calendar_view" type="radio" value="week" /> <span>Week</span></label><br>
+                <label><input name="calendar_view" type="radio" value="month" /> <span>Month</span></label>
               </div>
             </div>
           </div>
@@ -141,14 +108,24 @@
         <div class="row">
           <div class="input-field col s12 right-align">
             <button class="btn waves-effect waves-light" type="submit" name="action">
-              Save Changes
+              Save Availability
               <i class="material-icons right">send</i>
             </button>
           </div>
         </div>
       </div>
-
     </form>
   </div>
 </div>
+
+@push('scripts')
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var elems = document.querySelectorAll('select');
+    M.FormSelect.init(elems);
+
+    document.getElementById('map').innerHTML = 'Google Map placeholder';
+  });
+</script>
+@endpush
 @endsection
